@@ -1,12 +1,11 @@
 from pydantic import BaseModel, EmailStr, Field
-from pydantic_extra_types.phone_numbers import PhoneNumber
 
 
-class Employee(BaseModel):
+class CreateEmployee(BaseModel):
     """ Creates a valid Employee object to post to DB """
     name: str
     email: EmailStr
-    phone: PhoneNumber = Field(..., min_length=10, max_length=15)
+    phone: str = Field(..., min_length=10, max_length=25)
     address: str
     position: str
     salary: int
@@ -24,3 +23,8 @@ class Employee(BaseModel):
                 "salary": 2000000,
             }
         }
+
+
+class ActionConfirm(BaseModel):
+    """ Creates a success or failure action message to show as API call response """
+    message: str
