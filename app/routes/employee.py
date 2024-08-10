@@ -1,7 +1,11 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.schemas import CreateEmployee, ActionConfirm
+from app.schemas import (
+    CreateEmployee,
+    ActionConfirm,
+    EmployeeProfile,
+    )
 from app.services import EmployeeService
 from models import get_db
 
@@ -22,5 +26,12 @@ def create_employee_routes() -> APIRouter:
         msg = employee_service.create_employee(employee=employee, db=db)
         msg_formatted = ActionConfirm(message=msg)
         return msg_formatted
+
+    # -------- Display employee details by -----------#
+    @router.get('/profile/{id}/', response_model=EmployeeProfile, status_code=status.HTTP_200_OK)
+    async def get_employee_profile(emp_id: int, db: Session = Depends(get_db)):
+        """ GET details about a specific employee by their id"""
+        employee = employee_service.get_employee_details(emp_id=emp_id, db=db)
+        return employee
 
     return router
