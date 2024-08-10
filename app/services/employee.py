@@ -62,4 +62,12 @@ class EmployeeService:
             detail=f"Employee with id {emp_id} does not exist"
         )
 
+    # -------- GET all employee records ------- #
+    @staticmethod
+    def get_all_employees(*, start: int = 0, limit: int = 50, db: Session):
+        """ Get all employees within the specified range"""
+        db_employees = db.query(Employee).offset(start).limit(limit).all()
+        return db_employees
+
+
 
