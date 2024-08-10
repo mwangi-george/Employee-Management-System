@@ -93,8 +93,10 @@ class EmployeeService:
             detail=f"Employee with id {emp_id} does not exist"
         )
 
+    # ------ UPDATE an employee's salary or position
     @staticmethod
     def promote_or_demote_employee(emp_id: int, details: PromoteOrDemoteEmployee,  db: Session):
+        """ Promote or demote an employee """
         db_employee = db.query(Employee).filter_by(id=emp_id).first()
         if db_employee:
             try:
@@ -108,6 +110,27 @@ class EmployeeService:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="Could not update employee"
+                )
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Employee with id {emp_id} does not exist"
+        )
+
+    # ------- DELETE an Employee's record
+    @staticmethod
+    def delete_employee(emp_id: int, db: Session):
+        """ Delete an employee """
+        db_employee = db.query(Employee).filter_by(id=emp_id).first()
+        if db_employee:
+            try:
+                db.delete(db_employee)
+                db.commit()
+                return f"{db_employee.name} deleted successfully"
+            except Exception as e:
+                print(f"An error occurred while deleting employee {e}")
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Could not delete employee"
                 )
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
