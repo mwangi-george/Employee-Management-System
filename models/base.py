@@ -15,7 +15,7 @@ FALL_BACK_DB_URL = "sqlite:///employees.db"
 
 # define a connection engine based on available db
 if DB_URL is not None:
-    engine = create_engine(FALL_BACK_DB_URL)
+    engine = create_engine(DB_URL)
 else:
     engine = create_engine(FALL_BACK_DB_URL, connect_args={"check_same_thread": False})
 
