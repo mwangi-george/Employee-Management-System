@@ -58,3 +58,20 @@ class EmployeeProfile(BaseModel):
 class MultipleEmployees(BaseModel):
     """ Returns a list of Employee objects """
     employees: list[EmployeeProfile]
+
+
+class UpdateEmployee(BaseModel):
+    """ Creates a response object to update an existing Employee object """
+    email: EmailStr
+    phone: str
+    address: str
+
+    class Config:
+        from_attributes = True
+        json_schema_extra = {
+            "example": {
+                "email": "patrick_james@fastland.com",
+                "phone": "+254-749-555-555",
+                "address": "12th Avenue, Kahawa Estate",
+            }
+        }
