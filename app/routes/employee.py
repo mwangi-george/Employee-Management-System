@@ -5,6 +5,7 @@ from app.schemas import (
     CreateEmployee,
     ActionConfirm,
     EmployeeProfile,
+    MultipleEmployees,
     )
 from app.services import EmployeeService
 from models import get_db
@@ -14,7 +15,7 @@ def create_employee_routes() -> APIRouter:
     """ Creates routes for all employees endpoints"""
 
     # instantiate router
-    router = APIRouter(prefix="/employee")
+    router = APIRouter(prefix="/employees")
 
     # instantiate db operation methods
     employee_service = EmployeeService()
@@ -33,5 +34,14 @@ def create_employee_routes() -> APIRouter:
         """ GET details about a specific employee by their id"""
         employee = employee_service.get_employee_details(emp_id=emp_id, db=db)
         return employee
+
+    @router.get('/all/', response_model=MultipleEmployees, status_code=status.HTTP_200_OK)
+    async def get_all_employees(start: int = 0, limit: int = 50, db: Session = Depends(get_db)):
+        """ GET all employees within specified range"""
+        employees = employee_service.get_all_employees(start=start, limit=limit, db=db)
+
+        # formatted responses to conform to required output schema
+        employees_formatted = MultipleEmployees(employees=employees)
+        return employees_formatted
 
     return router
