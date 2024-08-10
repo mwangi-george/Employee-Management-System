@@ -24,7 +24,7 @@ def create_employee_routes() -> APIRouter:
         return msg_formatted
 
     # -------- Display employee details by -----------#
-    @router.get('/profile/{id}/', response_model=EmployeeProfile, status_code=status.HTTP_200_OK)
+    @router.get('/profile/', response_model=EmployeeProfile, status_code=status.HTTP_200_OK)
     async def get_employee_profile(employee_id: int, db: Session = Depends(get_db)):
         """ GET details about a specific employee by their id"""
         employee_details = employee_service.get_employee_details(emp_id=employee_id, db=db)
@@ -41,7 +41,7 @@ def create_employee_routes() -> APIRouter:
         return employees_formatted
 
     # ------ UPDATE an employees profile ---------- #
-    @router.put('/profile/{id}/', response_model=ActionConfirm, status_code=status.HTTP_200_OK)
+    @router.put('/profile/', response_model=ActionConfirm, status_code=status.HTTP_200_OK)
     async def update_employee_profile(employee_id: int, details: UpdateEmployee, db: Session = Depends(get_db)):
         """ Update a employee profile"""
         msg = employee_service.update_employee(emp_id=employee_id, employee=details, db=db)
@@ -49,12 +49,19 @@ def create_employee_routes() -> APIRouter:
         return msg_formatted
 
     # --------- UPDATE an employees position or salary ------- #
-    @router.put('/profile/promote/{id}/', response_model=ActionConfirm, status_code=status.HTTP_200_OK)
+    @router.put('/profile/promote/', response_model=ActionConfirm, status_code=status.HTTP_200_OK)
     async def promote_or_demote_employee(
             employee_id: int, details: PromoteOrDemoteEmployee, db: Session = Depends(get_db)
     ):
         """ Promote or demote employee by their id"""
         msg = employee_service.promote_or_demote_employee(emp_id=employee_id, details=details, db=db)
+        msg_formatted = ActionConfirm(message=msg)
+        return msg_formatted
+
+    # -------- DELETE an employee -------- #
+    @router.delete('/profile/', response_model=ActionConfirm, status_code=status.HTTP_200_OK)
+    async def removed_employee(employee_id: int, db: Session = Depends(get_db)):
+        msg = employee_service.delete_employee(emp_id=employee_id, db=db)
         msg_formatted = ActionConfirm(message=msg)
         return msg_formatted
 
