@@ -6,6 +6,7 @@ from app.schemas import (
     ActionConfirm,
     EmployeeProfile,
     MultipleEmployees,
+    UpdateEmployee,
     )
 from app.services import EmployeeService
 from models import get_db
@@ -30,9 +31,9 @@ def create_employee_routes() -> APIRouter:
 
     # -------- Display employee details by -----------#
     @router.get('/profile/{id}/', response_model=EmployeeProfile, status_code=status.HTTP_200_OK)
-    async def get_employee_profile(emp_id: int, db: Session = Depends(get_db)):
+    async def get_employee_profile(employee_id: int, db: Session = Depends(get_db)):
         """ GET details about a specific employee by their id"""
-        employee = employee_service.get_employee_details(emp_id=emp_id, db=db)
+        employee = employee_service.get_employee_details(emp_id=employee_id, db=db)
         return employee
 
     @router.get('/all/', response_model=MultipleEmployees, status_code=status.HTTP_200_OK)
@@ -43,5 +44,11 @@ def create_employee_routes() -> APIRouter:
         # formatted responses to conform to required output schema
         employees_formatted = MultipleEmployees(employees=employees)
         return employees_formatted
+
+    @router.put('/profile/{id}', response_model=ActionConfirm, status_code=status.HTTP_200_OK)
+    async def update_employee_profile(employee_id: int, employee: UpdateEmployee, db: Session = Depends(get_db)):
+        msg = employee_service.update_employee(emp_id=employee_id, employee=employee, db=db)
+        msg_formatted = ActionConfirm(message=msg)
+        return msg_formatted
 
     return router
