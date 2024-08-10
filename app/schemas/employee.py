@@ -45,8 +45,8 @@ class EmployeeProfile(BaseModel):
         json_schema_extra = {
             "example": {
                 "id": 1,
-                "name": "<NAME>",
-                "email": "<EMAIL>",
+                "name": "Patrick K. James",
+                "email": "patrick_james@fastland.com",
                 "phone": "+254-749-555-555",
                 "address": "12th Avenue, Kahawa Estate",
                 "position": "Senior Systems Engineer",
