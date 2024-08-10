@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from models import Employee
-from app.schemas import CreateEmployee, UpdateEmployee
+from app.schemas import CreateEmployee, UpdateEmployee, PromoteOrDemoteEmployee
 
 
 class EmployeeService:
@@ -82,6 +82,27 @@ class EmployeeService:
                 db.commit()
                 db.refresh(db_employee)
                 return f"{db_employee.name} updated successfully"
+            except Exception as e:
+                print(f"An error occurred while updating employee {e}")
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Could not update employee"
+                )
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Employee with id {emp_id} does not exist"
+        )
+
+    @staticmethod
+    def promote_or_demote_employee(emp_id: int, details: PromoteOrDemoteEmployee,  db: Session):
+        db_employee = db.query(Employee).filter_by(id=emp_id).first()
+        if db_employee:
+            try:
+                db_employee.position = details.position
+                db_employee.salary = details.salary
+                db.commit()
+                db.refresh(db_employee)
+                return f"{db_employee.name}'s profile updated successfully"
             except Exception as e:
                 print(f"An error occurred while updating employee {e}")
                 raise HTTPException(

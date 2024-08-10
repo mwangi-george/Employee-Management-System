@@ -75,3 +75,17 @@ class UpdateEmployee(BaseModel):
                 "address": "12th Avenue, Kahawa Estate",
             }
         }
+
+
+class PromoteOrDemoteEmployee(BaseModel):
+    position: str
+    salary: int
+
+    class Config:
+        from_attributes = True
+        json_schema_extra = {
+            "example": {
+                "position": "Director Systems Engineer",
+                "salary": 2500000,
+            }
+        }
