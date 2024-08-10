@@ -11,6 +11,7 @@ class EmployeeService:
         """ Initialize the backend db services """
         pass
 
+    # --------- POST a new employee to db ---------- #
     @staticmethod
     def create_employee(employee: CreateEmployee, db: Session):
         """ Create a new employee """
@@ -47,5 +48,18 @@ class EmployeeService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Could not add employee"
             )
+
+    # ---------GET employee by id ----------- #
+    @staticmethod
+    def get_employee_details(emp_id: int, db: Session):
+        """ Get employee details from db by employee id """
+        db_employee = db.query(Employee).filter_by(id=emp_id).first()
+        if db_employee:
+            return db_employee
+        # raise a 404 error if none exists
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Employee with id {emp_id} does not exist"
+        )
 
 
